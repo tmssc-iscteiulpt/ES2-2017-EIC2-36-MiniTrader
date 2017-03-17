@@ -65,6 +65,7 @@ public class MicroServerTest {
 	public void setup(){
 		ms = new MicroServer();
 		System.out.println("olá.");
+		System.out.println("Tudo bem?");
 		when(msg1.getType()).thenReturn(Type.CONNECTED);
 		when(msg1.getOrder()).thenReturn(null);
 		when(msg1.getSenderNickname()).thenReturn("userA");
