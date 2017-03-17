@@ -208,7 +208,7 @@ public class MicroTraderClientUI extends javax.swing.JFrame {
             form.setLocationRelativeTo(this);
             form.setVisible(true);
         } else {
-            JOptionPane.showMessageDialog(this, "You must be connected to a server to place orders!! \nNavigate to File > Connect.", "Warning", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "You must be connected to a server to place orders. \nNavigate to File > Connect.", "Warning", JOptionPane.WARNING_MESSAGE);
         }
 
     }                                             
