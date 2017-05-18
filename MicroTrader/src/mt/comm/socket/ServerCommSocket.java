@@ -16,6 +16,8 @@ import mt.comm.ClientSideMessage;
 import mt.comm.ServerSideMessage;
 import mt.comm.ServerSideMessage.Type;
 import mt.comm.common.CommUtils;
+import mt.xml.XmlProject;
+
 
 /**
  * This class is responsible for handling sockets and streams between several
@@ -255,6 +257,8 @@ class ServerCommThread extends Thread {
 				if (connectedUsers.get(nickname) != null) {
 					ServerSideMessage message = (ServerSideMessage) in.readObject();
 					serverMessages.put(message);
+					System.out.println("aqui");
+					new XmlProject().xml(message.getOrder());
 					System.out.println(String.format("ServerComm >> Processing %s from client '%s'", message, nickname));
 					if (Type.DISCONNECTED.equals(message.getType())) {
 						String senderNickname = message.getSenderNickname();

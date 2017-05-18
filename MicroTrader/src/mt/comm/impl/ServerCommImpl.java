@@ -10,6 +10,7 @@ import mt.comm.ServerSideMessage;
 import mt.comm.common.CommUtils;
 import mt.comm.socket.ServerCommSocket;
 
+
 public class ServerCommImpl implements ServerComm {
 	/**
 	 * Class responsible for handling sockets and streams between several
@@ -47,6 +48,7 @@ public class ServerCommImpl implements ServerComm {
 		ServerSideMessage nextMessage = null;
 		try {
 			nextMessage = serverMessages.take();
+			
 		} catch (InterruptedException e) {
 			System.out.println("ServerComm >> An error has thrown while taking a server message due to: " + CommUtils.getCause(e));
 		}
