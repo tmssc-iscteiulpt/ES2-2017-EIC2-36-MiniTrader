@@ -186,7 +186,7 @@ public class PlaceOrderForm extends javax.swing.JDialog {
 			try {
 				numberOfUnits = Long.valueOf(numberOfUnitsTxt.getText().trim());
 				if (numberOfUnits < 10) {
-					message = (message.isEmpty() ? "" : message + "\n") + "Number of units must be greater than 9.";
+					message = (message.isEmpty() ? "" : message + "\n") + "Number of units must be greater than 9!";
 				} else if (numberOfUnits > Integer.MAX_VALUE) {
 					message = (message.isEmpty() ? "" : message + "\n") + "Number of units must be less than "
 							+ Integer.MAX_VALUE + ".";
