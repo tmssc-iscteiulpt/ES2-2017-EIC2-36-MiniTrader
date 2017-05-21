@@ -1,5 +1,7 @@
 package mt.server;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -12,6 +14,23 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import mt.Order;
 import mt.comm.ServerComm;
@@ -240,6 +259,9 @@ public class MicroServer implements MicroTraderServer {
 		LOGGER.log(Level.INFO, "Processing new order...");
 
 		Order o = msg.getOrder();
+		
+		//save the order on XML file
+		xmlPersistency(o);
 
 		// save the order on map
 		saveOrder(o);
@@ -395,5 +417,35 @@ public class MicroServer implements MicroTraderServer {
 			}
 		}
 	}
+	
+	private void xmlPersistency(Order o){
+        try {	
+            File inputFile = new File("Persistency.xml");
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(inputFile);
+            doc.getDocumentElement().normalize();         
+            
+            // Create new element Order with attributes
+	         Element newElementOrder = doc.createElement("Order");
+	         newElementOrder.setAttribute("Id", ""+o.getServerOrderID());
+	         newElementOrder.setAttribute("Type", (o.isBuyOrder()? "Buy" : "Sell"));
+	         newElementOrder.setAttribute("Stock", o.getStock());
+	         newElementOrder.setAttribute("Units", ""+o.getNumberOfUnits());
+	         newElementOrder.setAttribute("Price", ""+o.getPricePerUnit());
+            
+            // Add new node to XML document root element
+            Node n = doc.getDocumentElement();
+            n.appendChild(newElementOrder);
+            
+            // Save XML document
+            System.out.println("Save XML document.");
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            StreamResult result = new StreamResult(new FileOutputStream("Persistency.xml"));
+            DOMSource source = new DOMSource(doc);
+            transformer.transform(source, result);
+         } catch (Exception e) { e.printStackTrace(); }
+      }
 
 }
