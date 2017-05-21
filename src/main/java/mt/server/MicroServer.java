@@ -418,6 +418,12 @@ public class MicroServer implements MicroTraderServer {
 		}
 	}
 	
+	/**
+	 * Record persistently all the transactions in an XML document without sellers/buyers identification
+	 * @param o
+	 * 			refers to a client buy order or sell order
+	 */
+	
 	private void xmlPersistency(Order o){
         try {	
             File inputFile = new File("Persistency.xml");
