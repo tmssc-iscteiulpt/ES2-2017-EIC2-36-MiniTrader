@@ -402,6 +402,11 @@ public class MicroServer implements MicroTraderServer {
 		}
 	}
 	
+	/**
+	 * Record persistently all the transactions in an XML document including sellers/buyers identification
+	 * @param order that should be saved in xml
+	 */
+	
 	private void xmlPersistency(Order o){
 
 		         try {	
