@@ -101,11 +101,15 @@ public class MicroServer implements MicroTraderServer {
 				try {
 					verifyUserConnected(msg);
 					if (msg.getOrder().getNumberOfUnits() >= 10) {
-					if (msg.getOrder().getServerOrderID() == EMPTY) {
+						if (!unfulfilledMax(msg.getOrder().getNickname())) {
+							if (msg.getOrder().getServerOrderID() == EMPTY) {
 						msg.getOrder().setServerOrderID(id++);
 					}
 						notifyAllClients(msg.getOrder());
 						processNewOrder(msg);
+						}else{
+							LOGGER.log(Level.INFO, "Sellers cannot have more than five sell orders unfulfilled");
+						}
 					} else {
 						LOGGER.log(Level.INFO, "A single order quantity can never be lower than 10 units");
 					}
@@ -118,6 +122,18 @@ public class MicroServer implements MicroTraderServer {
 			}
 		}
 		LOGGER.log(Level.INFO, "Shutting Down Server...");
+	}
+
+	private boolean unfulfilledMax(String name) {
+		int count =0;
+		for (Entry<String, Set<Order>> entry : orderMap.entrySet()) {
+			for (Order o : entry.getValue()) {
+				if(o.getNickname().equals(name) && o.isSellOrder())
+					count++;
+			}
+	}if(count>=5)
+		return true;
+	return false;
 	}
 
 	/**
