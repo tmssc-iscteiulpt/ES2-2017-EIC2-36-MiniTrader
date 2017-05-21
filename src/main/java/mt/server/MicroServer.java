@@ -101,13 +101,18 @@ public class MicroServer implements MicroTraderServer {
 				try {
 					verifyUserConnected(msg);
 					if (msg.getOrder().getNumberOfUnits() >= 10) {
-						if (!unfulfilledMax(msg.getOrder().getNickname())) {
-							if (msg.getOrder().getServerOrderID() == EMPTY) {
-						msg.getOrder().setServerOrderID(id++);
-					}
-						notifyAllClients(msg.getOrder());
-						processNewOrder(msg);
-						}else{
+						if (!unfulfilledMax(msg.getOrder().getNickname())){
+							if (!ownOrder(msg.getOrder())) {
+								if (msg.getOrder().getServerOrderID() == EMPTY) {
+									msg.getOrder().setServerOrderID(id++);
+								}
+								notifyAllClients(msg.getOrder());
+								processNewOrder(msg);
+							} else {
+								LOGGER.log(Level.INFO,
+										"Clients are not allowed to issue sell orders for their own buy orders and vice versa");
+							}
+						}else {
 							LOGGER.log(Level.INFO, "Sellers cannot have more than five sell orders unfulfilled");
 						}
 					} else {
@@ -125,15 +130,35 @@ public class MicroServer implements MicroTraderServer {
 	}
 
 	private boolean unfulfilledMax(String name) {
-		int count =0;
+		int count = 0;
 		for (Entry<String, Set<Order>> entry : orderMap.entrySet()) {
 			for (Order o : entry.getValue()) {
-				if(o.getNickname().equals(name) && o.isSellOrder())
+				if (o.getNickname().equals(name) && o.isSellOrder())
 					count++;
 			}
-	}if(count>=5)
-		return true;
-	return false;
+		}
+		if (count >= 5)
+			return true;
+		return false;
+	}
+	/**
+	 * checks if Client is trying to issue sell orders for their own buy orders and vice versa
+	 * @param o2
+	 * 			refer to the order sent by the client
+	 * @return
+	 */
+	private boolean ownOrder(Order o2) {
+		for (Entry<String, Set<Order>> entry : orderMap.entrySet()) {
+			for (Order o : entry.getValue()) {
+				if (o2.isBuyOrder() && o.isSellOrder() && o2.getNickname().equals(o.getNickname())
+						&& o2.getStock().equals(o.getStock()) && o2.getPricePerUnit() == o.getPricePerUnit())
+					return true;
+				else if (o2.isSellOrder() && o.isBuyOrder() && o2.getNickname().equals(o.getNickname())
+						&& o2.getStock().equals(o.getStock()) && o2.getPricePerUnit() == o.getPricePerUnit())
+					return true;
+			}
+		}
+		return false;
 	}
 
 	/**
