@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<XML>
+<Order Id="1" Price="2.0" Stock="laranja" Type="Sell" Units="10">
+<Customer>Manuel</Customer>
+</Order>
+<Order Id="1" Price="2.0" Stock="limao" Type="Sell" Units="20">
+<Customer>tiago</Customer>
+</Order>
+<Order Id="1" Price="2.0" Stock="laranjaaa" Type="Sell" Units="10">
+<Customer>tiago</Customer>
+</Order>
+</XML>
