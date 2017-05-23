@@ -120,7 +120,7 @@ public class MicroServer implements MicroTraderServer {
 				try {
 					verifyUserConnected(msg);
 					if (msg.getOrder().getNumberOfUnits() >= 10) {
-						if (!unfulfilledMax(msg.getOrder().getNickname())) {
+						if (!unfulfilledMax(msg.getOrder().getNickname()) && msg.getOrder().isSellOrder()){
 							if (msg.getOrder().getServerOrderID() == EMPTY) {
 						msg.getOrder().setServerOrderID(id++);
 					}
